@@ -1,0 +1,1557 @@
+<!--
+-------------------------REBUS- Game for Kids--------------------------------
+Developed by TRUSHIL LAD : PRIYANK PRAJAPATI : YASH GOLWALA
+This Project was developed in the interest of educational game for kids above the age of 5.
+The motive behind this game is to provide and improve the gaming habits of the children from the begining
+and Helping them in learnig with fun. Enjoy this Webapp and Suggestions are most Welcome.
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name='viewport' content = 'width = device-width, initial-scale = 1.0, user-scalable = no'/>
+    <script type="text/javascript" src="jquery-2.1.3.min.js"> <!--  Mandatory Library Included -->
+    </script>
+    <script type="text/javascript" src="introtoapps.min.js">  <!--  Mandatory Library Included -->
+    </script>
+    <script type="text/javascript">
+      var total_score=0;      // Maintaining the Score
+      var completion_score=10;// Score on completion of word
+      var category_number=0;  // Category of the word
+      var item_number=0;      // For the track of word number
+      var chosenCategory;     // Selected catagory
+      var getHint ;          // Word getHint
+      var word ;              // Selected word
+      var guess ;             // Geuss
+      var geusses = [ ];      // Stored geusses
+      var lives ;             // Lives
+      var counter ;           // Count correct geusses
+      var space;              // Number of spaces in word '-'
+
+    //Music Part commence
+      var x=1;
+    	function toggleSound(){
+    		if(x==1){
+    		    document.getElementById('background').muted=true;
+            document.getElementById('music').value="Music : OFF";
+    		    x=0;
+    		}
+    		else{
+    		    document.getElementById('background').muted=false;
+            document.getElementById('music').value="Music : ON";
+    		    x=1;
+    		}
+    	}
+      //Music part concludes
+
+      //Sound part commence
+      var y=1;
+    	function toggle()
+    	{
+    		if(y==1)
+    		{
+    			document.getElementById("btnclk_sound").src=null;
+          document.getElementById('bgsound').value="Sound : OFF";
+    			y=0;
+    		}
+    		else
+    		{
+    			document.getElementById("btnclk_sound").src="Sound/pop1.mp3";
+          document.getElementById('bgsound').value="Sound : ON";
+    			y=1;
+    		}
+    	}
+      //sound part concludes
+      //next_colors commences
+      var e =0;
+      function next_colors(){
+        var z = random(0,10);
+        if(e != z){
+        var img1="Images/Colors (";
+        var img2=z+1;
+        var img3=").png";
+        var img4=img1.concat(img2);
+        var img5=img4.concat(img3);
+        var aud1="Sound/Colors (";
+        var aud3=").mp3";
+        var aud4=aud1.concat(img2);
+        var aud5=aud4.concat(aud3);
+        document.getElementById('c_audio').src=aud5;
+        document.getElementById('c_img').src=img5;
+        del();
+        alpha_letter(0,z);
+      }
+      else {
+        next_colors();
+      }
+        e = z;
+      }
+      //next_colors concludes
+      //next_fruits commences
+      function next_fruits(){ // Function used for the appearnace of the next fruits in the fruits category
+        var z = random(0,10);
+        if(e != z){
+        var img1="Images/Fruits (";
+        var img2=z+1;
+        var img3=").png";
+        var img4=img1.concat(img2);
+        var img5=img4.concat(img3);
+        var aud1="Sound/Fruits (";
+        var aud3=").mp3";
+        var aud4=aud1.concat(img2);
+        var aud5=aud4.concat(aud3);
+        document.getElementById('f_audio').src=aud5;
+        document.getElementById('f_img').src=img5;
+        del();
+        alpha_letter1(1,z);
+      }
+      else {
+        next_fruits();
+      }
+        e = z;
+      }
+      //next_fruits concludes
+      //next_vegetables commences
+      function next_vegetables(){       // Function used for the appearnace of the next vegetable in the vegetables category
+        var z = random(0,10);
+        if(e != z){
+        var img1="Images/Vegetables (";
+        var img2=z+1;
+        var img3=").png";
+        var img4=img1.concat(img2);
+        var img5=img4.concat(img3);
+        var aud1="Sound/Vegetables (";
+        var aud3=").mp3";
+        var aud4=aud1.concat(img2);
+        var aud5=aud4.concat(aud3);
+        document.getElementById('v_audio').src=aud5;
+        document.getElementById('v_img').src=img5;
+        del();
+        alpha_letter2(2,z);
+      }
+      else {
+        next_vegetables();
+      }
+        e = z;
+      }
+      //next_vegetables concludes
+      //next_sports commences
+      function next_sports(){     // Function used for the appearnace of the next sports in the fsports category
+        var z = random(0,10);
+        if(e != z){
+        var img1="Images/Sports (";
+        var img2=z+1;
+        var img3=").png";
+        var img4=img1.concat(img2);
+        var img5=img4.concat(img3);
+        var aud1="Sound/Sports (";
+        var aud3=").mp3";
+        var aud4=aud1.concat(img2);
+        var aud5=aud4.concat(aud3);
+        document.getElementById('s_audio').src=aud5;
+        document.getElementById('s_img').src=img5;
+        del();
+        alpha_letter3(3,z);
+      }
+      else {
+        next_sports();
+      }
+        e = z;
+      }
+      //next_sports concludes
+      //Deletion process commences
+      function del(){           //  Removing the old word an replacing the new one
+        var del1 = document.getElementById('my-word');
+        del1.parentNode.removeChild(del1);
+        var del2 = document.getElementById('alphabet');
+        del2.parentNode.removeChild(del2);
+      }
+      //Deletion process concludes
+      //reset colors Images
+      reset_colors = function(){
+        document.getElementById('c_img').src="Images/Colors (1).png";
+      }
+      //reset colors Images
+      //reset fruits Images
+      reset_fruits = function(){
+        document.getElementById('f_img').src="Images/Fruits (1).png";
+      }
+      //reset fruits Images
+      //reset vegetable Images
+      reset_vegetables = function(){
+        document.getElementById('v_img').src="Images/Vegetables (1).png";
+      }
+      //reset vegetable Images
+      //reset sports Images
+      reset_sports = function(){
+        document.getElementById('s_img').src="Images/Sports (1).png";
+      }
+      //reset sports Images
+
+      $(document).ready(function(){
+
+        $("#level_btn").onTap(function(){       // Used for single window application
+              $("#menu").removeClass("menu");     // As given in the API References
+              $("#menu").addClass("hide");
+              $("#levels").removeClass("hide");
+              $("#levels").addClass("levels");
+              $("body").css("background-image","url(Images/levels.jpg)")
+          });
+          $("#settings_btn").onTap(function(){
+              $("#menu").removeClass("menu");
+              $("#menu").addClass("hide");
+              $("#settings").removeClass("hide");
+              $("#settings").addClass("settings");
+              $("body").css("background-image","url(Images/levels.jpg)")
+          });
+          $("#help_btn").onTap(function(){
+              $("#menu").removeClass("menu");
+              $("#menu").addClass("hide");
+              $("#help").removeClass("hide");
+              $("#help").addClass("help");
+              $("body").css("background-image","url(Images/levels.jpg)")
+          });
+
+          $(".score").html("Score:"+total_score);   // Fro incrementing the Score
+
+          $("#colors_btn").onTap(function(){
+              $("#levels").removeClass("levels");
+              $("#levels").addClass("hide");
+              $("#colors").removeClass("hide");
+              $("#colors").addClass("colors");
+              $("body").css("background-image","url(Images/colors.png)");
+          });
+
+          $("#colors_menu_btn").onTap(function(){
+            $("#colors").removeClass("colors");
+            $("#colors").addClass("hide");
+            $("#levels").removeClass("hide");
+            $("#levels").addClass("levels");
+            $("body").css("background-image","url(Images/levels.jpg)");
+          });
+
+          $("#fruits_btn").onTap(function(){
+              $("#levels").removeClass("levels");
+              $("#levels").addClass("hide");
+              $("#fruits").removeClass("hide");
+              $("#fruits").addClass("fruits");
+              $("body").css("background-image","url(Images/fruits.png)");
+          });
+
+          $("#fruits_menu_btn").onTap(function(){
+            $("#fruits").removeClass("fruits");
+            $("#fruits").addClass("hide");
+            $("#levels").removeClass("hide");
+            $("#levels").addClass("levels");
+            $("body").css("background-image","url(Images/levels.jpg)")
+          });
+          $("#vegetables_btn").onTap(function(){
+              $("#levels").removeClass("levels");
+              $("#levels").addClass("hide");
+              $("#vegetables").removeClass("hide");
+              $("#vegetables").addClass("vegetables");
+              $("body").css("background-image","url(Images/vegetables.png)")
+          });
+
+          $("#vegetables_menu_btn").onTap(function(){
+            $("#vegetables").removeClass("vegetables");
+            $("#vegetables").addClass("hide");
+            $("#levels").removeClass("hide");
+            $("#levels").addClass("levels");
+            $("body").css("background-image","url(Images/levels.jpg)");
+          });
+          $("#sports_btn").onTap(function(){
+              $("#levels").removeClass("levels");
+              $("#levels").addClass("hide");
+              $("#sports").removeClass("hide");
+              $("#sports").addClass("sports");
+              $("body").css("background-image","url(Images/sports.png)");
+          });
+
+          $("#sports_menu_btn").onTap(function(){
+            $("#sports").removeClass("sports");
+            $("#sports").addClass("hide");
+            $("#levels").removeClass("hide");
+            $("#levels").addClass("levels");
+            $("body").css("background-image","url(Images/levels.jpg)");
+          });
+          $("#lmenu_btn").onTap(function(){
+              $("#menu").removeClass("hide");
+              $("#menu").addClass("menu");
+              $("#levels").removeClass("levels");
+              $("#levels").addClass("hide");
+              $("body").css("background-image","url(Images/main.png)");
+          });
+          $("#smenu_btn").onTap(function(){
+              $("#menu").removeClass("hide");
+              $("#menu").addClass("menu");
+              $("#settings").removeClass("settings");
+              $("#settings").addClass("hide");
+              $("body").css("background-image","url(Images/main.png)");
+          });
+          $("#step5_btn").onTap(function(){
+              $("#menu").removeClass("hide");
+              $("#menu").addClass("menu");
+              $("#help").removeClass("help");
+              $("#help").addClass("hide");
+              $("#step1").removeClass("hide");
+              $("#step1").addClass("tutor_step");
+              $("#step5").removeClass("help");
+              $("#step5").addClass("hide");
+              $("body").css("background-image","url(Images/main.png)");
+          });
+        $("#quit_btn").onTap(function(){            // Quit Button Script
+            var exit = confirm("Quitting the game will loose all your scores! Do you want to quit?");
+            if (exit == true) {
+              this.window.close();
+            }
+        });
+
+        // Tutorial Steps made using this steps code
+        $("#step1_btn").onTap(function(){
+            $("#step1").removeClass("tutor_step");
+            $("#step1").addClass("hide");
+            $("#step2").removeClass("hide");
+            $("#step2").addClass("tutor_step");
+        });
+        $("#step2_btn").onTap(function(){
+            $("#step2").removeClass("tutor_step");
+            $("#step2").addClass("hide");
+            $("#step3").removeClass("hide");
+            $("#step3").addClass("tutor_step");
+        });
+        $("#step3_btn").onTap(function(){
+            $("#step3").removeClass("tutor_step");
+            $("#step3").addClass("hide");
+            $("#step4").removeClass("hide");
+            $("#step4").addClass("tutor_step");
+        });
+        $("#step4_btn").onTap(function(){
+            $("#step4").removeClass("tutor_step");
+            $("#step4").addClass("hide");
+            $("#step5").removeClass("hide");
+            $("#step5").addClass("tutor_step");
+        });
+      }
+    );
+
+      // Functions used for verifying the alphabets and displaying the Letter Buttons
+     function alpha_letter(category_number,item_number) {
+
+       var alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+             'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',   // Alphabet Letter Array
+             'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+
+      // Get elements
+      var showLives = document.getElementById("mylives");
+      var showCatagory = document.getElementById("scatagory");
+
+      // create alphabet ul
+      var buttons = function () {
+        myButtons = document.getElementById('buttons');
+        letters = document.createElement('ul');
+
+        for (var i = 0; i < alphabet.length; i++) {
+          letters.id = 'alphabet';
+          list = document.createElement('li');
+          list.id = 'letter';
+          list.innerHTML = alphabet[i];
+          check();
+          myButtons.appendChild(letters);
+          letters.appendChild(list);
+        }
+      }
+
+      // Create geusses ul
+       result = function () {
+        wordHolder = document.getElementById('hold');
+        correct = document.createElement('ul');
+
+        for (var i = 0; i < word.length; i++) {
+          correct.setAttribute('id', 'my-word');
+          guess = document.createElement('li');
+          guess.setAttribute('class', 'guess');
+          if (word[i] === "-") {
+            guess.innerHTML = "-";
+            space = 1;
+          } else {
+            guess.innerHTML = "<input type='button' class='letter_btn' value=' '/>"; // Empty Space created for inserting values
+          }
+
+          geusses.push(guess);    //Adding the values of too the Empth buttons
+          wordHolder.appendChild(correct);
+          correct.appendChild(guess);
+        }
+      }
+
+      // Show lives
+       comments = function () {
+        showLives.innerHTML = "Moves Left " + lives ;
+        if (lives < 1) {
+          showLives.innerHTML = "Out of Moves";
+          $(".timer").addClass("hide");
+          time=false;
+
+        }
+        for (var i = 0; i < geusses.length; i++) {
+          if (counter + space === geusses.length) {
+            showLives.innerHTML = "<p style='color:green'>Correct!</p>";
+            $(".timer").addClass("hide");
+            time=false;
+             total_score = total_score + completion_score + lives ;
+            $(".score").html( total_score );
+            var modal = document.getElementById('myModal_c');
+            var modalImg = document.getElementById('img01');
+            modal.style.display = "block";
+
+            modalImg.src = document.getElementById('c_img').src;
+            var span = document.getElementsByClassName('close')[0];
+            span.onclick = function() {
+              modal.style.display = "none";
+              next_colors();
+            }
+
+            c_audio.play();
+          }
+        }
+      }
+
+      // OnClick Function
+       check = function () {
+        list.onclick = function () {
+          var geuss = (this.innerHTML);
+          this.setAttribute("class", "active");
+          this.onclick = null;
+          for (var i = 0; i < word.length; i++) {
+            if (word[i] === geuss) {
+              geusses[i].innerHTML = "<input type='button' class='letter_btn' value='" + geuss +  "'/>";
+              counter += 1;
+            }
+          }
+          var j = (word.indexOf(geuss));
+          if (j === -1) {
+            lives -= 1;
+            comments();
+            animate();
+          } else {
+            comments();
+          }
+        }
+      }
+
+
+      // Play
+      play = function () {
+        categories = [
+            ["RED", "BLUE", "PINK", "BLACK", "WHITE", "GREY", "YELLOW", "GREEN", "ORANGE", "VIOLET", "INDIGO"],
+            ["APPLE", "BANANA", "CHERRIES", "GRAPES", "COCONUT", "MANGO", "PINEAPPLE", "WATERMELON", "KIWI", "LITCHIE", "STRAWBERRY"],
+            ["CORN", "EGGPLANT", "PEA", "POTATO", "CABBAGE", "CUCUMBER", "LETTUCE", "SPINACH", "BROCCOLI", "FRENCHBEANS", "MUSHROOM"],
+            ["FOOTBALL", "GOLF", "SWIMMING", "TENNIS", "BOWLING", "CRICKET", "HOCKEY", "SQUASH", "ARCHERY", "BADMINTON", "SKATING"]
+        ];
+
+        chosenCategory = categories[category_number];
+        word = chosenCategory[item_number];
+        word = word.replace(/\s/g, "-");
+        console.log(word);
+        buttons();
+
+        geusses = [ ];
+        lives = 10;
+        counter = 0;
+        space = 0;
+        result();
+        comments();
+      }
+      play();
+    }
+    function alpha_letter1(category_number,item_number) {
+
+      var alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+            'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+            'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+
+     // Get elements
+     var showLives = document.getElementById("fruits_mylives");
+     var showCatagory = document.getElementById("scatagory");
+
+     // create alphabet ul
+     var buttons = function () {
+       myButtons = document.getElementById('buttons_fruits');
+       letters = document.createElement('ul');
+
+       for (var i = 0; i < alphabet.length; i++) {
+         letters.id = 'alphabet';
+         list = document.createElement('li');
+         list.id = 'letter';
+         list.innerHTML = alphabet[i];
+         check();
+         myButtons.appendChild(letters);
+         letters.appendChild(list);
+       }
+     }
+
+     // Create geusses ul
+      result = function () {
+       wordHolder = document.getElementById('hold_fruits');
+       correct = document.createElement('ul');
+
+       for (var i = 0; i < word.length; i++) {
+         correct.setAttribute('id', 'my-word');
+         guess = document.createElement('li');
+         guess.setAttribute('class', 'guess');
+         if (word[i] === "-") {
+           guess.innerHTML = "-";
+           space = 1;
+         } else {
+           guess.innerHTML = "<input type='button' class='letter_btn' value=' '/>"; // Empty Space created for inserting values
+         }
+
+         geusses.push(guess);
+         wordHolder.appendChild(correct);
+         correct.appendChild(guess);
+       }
+     }
+
+     // Show lives
+      comments = function () {
+       showLives.innerHTML = "Moves Left " + lives ;
+       if (lives < 1) {
+         showLives.innerHTML = "Out of Moves";
+
+
+
+       }
+       for (var i = 0; i < geusses.length; i++) {
+         if (counter + space === geusses.length) {
+           showLives.innerHTML = "<p style='color:green'>Correct!</p>";
+
+           time=false;
+            total_score = total_score + completion_score + lives ;
+           $("#fruits_score").html( total_score );
+           var modal = document.getElementById('myModal_f');
+           var modalImg = document.getElementById('img02');
+           modal.style.display = "block";
+           modalImg.src = document.getElementById('f_img').src;
+           var span = document.getElementsByClassName('close')[1];
+           span.onclick = function() {
+             modal.style.display = "none";
+             next_fruits();
+           }
+           f_audio.play();
+         }
+       }
+     }
+
+     // OnClick Function
+      check = function () {
+       list.onclick = function () {
+         var geuss = (this.innerHTML);
+         this.setAttribute("class", "active");
+         this.onclick = null;
+         for (var i = 0; i < word.length; i++) {
+           if (word[i] === geuss) {
+             geusses[i].innerHTML = "<input type='button'  class='letter_btn' value='" + geuss +  "'/>";
+             counter += 1;
+           }
+         }
+         var j = (word.indexOf(geuss));
+         if (j === -1) {
+           lives -= 1;
+           comments();
+           animate();
+         } else {
+           comments();
+         }
+       }
+     }
+
+
+     // Play
+     play = function () {
+       categories = [
+         ["RED", "BLUE", "PINK", "BLACK", "WHITE", "GREY", "YELLOW", "GREEN", "ORANGE", "VIOLET", "INDIGO"],
+         ["APPLE", "BANANA", "CHERRIES", "GRAPES", "COCONUT", "MANGO", "PINEAPPLE", "WATERMELON", "KIWI", "LITCHIE", "STRAWBERRY"],
+         ["CORN", "EGGPLANT", "PEA", "POTATO", "CABBAGE", "CUCUMBER", "LETTUCE", "SPINACH", "BROCCOLI", "FRENCHBEANS", "MUSHROOM"],
+         ["FOOTBALL", "GOLF", "SWIMMING", "TENNIS", "BOWLING", "CRICKET", "HOCKEY", "SQUASH", "ARCHERY", "BADMINTON", "SKATING"]
+       ];
+
+       chosenCategory = categories[category_number];
+       word = chosenCategory[item_number];
+       word = word.replace(/\s/g, "-");
+       console.log(word);
+       buttons();
+
+       geusses = [ ];
+       lives = 10;
+       counter = 0;
+       space = 0;
+       result();
+       comments();
+     }
+     play();
+    }
+    function alpha_letter2(category_number,item_number) {
+
+      var alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+            'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+            'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+
+     // Get elements
+     var showLives = document.getElementById("vegetables_mylives");
+     var showCatagory = document.getElementById("scatagory");
+
+     // create alphabet ul
+     var buttons = function () {
+       myButtons = document.getElementById('buttons_vegetables');
+       letters = document.createElement('ul');
+
+       for (var i = 0; i < alphabet.length; i++) {
+         letters.id = 'alphabet';
+         list = document.createElement('li');
+         list.id = 'letter';
+         list.innerHTML = alphabet[i];
+         check();
+         myButtons.appendChild(letters);
+         letters.appendChild(list);
+       }
+     }
+
+     // Create geusses ul
+      result = function () {
+       wordHolder = document.getElementById('hold_vegetables');
+       correct = document.createElement('ul');
+
+       for (var i = 0; i < word.length; i++) {
+         correct.setAttribute('id', 'my-word');
+         guess = document.createElement('li');
+         guess.setAttribute('class', 'guess');
+         if (word[i] === "-") {
+           guess.innerHTML = "-";
+           space = 1;
+         } else {
+           guess.innerHTML = "<input type='button' class='letter_btn' value=' '/>"; // Empty Space created for inserting values
+         }
+
+         geusses.push(guess);
+         wordHolder.appendChild(correct);
+         correct.appendChild(guess);
+       }
+     }
+
+     // Show lives
+      comments = function () {
+       showLives.innerHTML = "Moves Left " + lives ;
+       if (lives < 1) {
+         showLives.innerHTML = "Out of Moves";
+
+
+
+       }
+       for (var i = 0; i < geusses.length; i++) {
+         if (counter + space === geusses.length) {
+           showLives.innerHTML = "<p style='color:green'>Correct!</p>";
+
+           time=false;
+            total_score = total_score + completion_score + lives ;
+           $("#vegetables_score").html( total_score );
+           var modal = document.getElementById('myModal_v');
+           var modalImg = document.getElementById('img03');
+           modal.style.display = "block";
+           modalImg.src = document.getElementById('v_img').src;
+           var span = document.getElementsByClassName('close')[2];
+           span.onclick = function() {
+             modal.style.display = "none";
+             next_vegetables();
+           }
+           v_audio.play();
+         }
+       }
+     }
+
+     // OnClick Function
+      check = function () {
+       list.onclick = function () {
+         var geuss = (this.innerHTML);
+         this.setAttribute("class", "active");
+         this.onclick = null;
+         for (var i = 0; i < word.length; i++) {
+           if (word[i] === geuss) {
+             geusses[i].innerHTML = "<input type='button' class='letter_btn'  value='" + geuss +  "'/>";
+             counter += 1;
+           }
+         }
+         var j = (word.indexOf(geuss));
+         if (j === -1) {
+           lives -= 1;
+           comments();
+           animate();
+         } else {
+           comments();
+         }
+       }
+     }
+
+
+     // Play
+     play = function () {
+       categories = [
+         ["RED", "BLUE", "PINK", "BLACK", "WHITE", "GREY", "YELLOW", "GREEN", "ORANGE", "VIOLET", "INDIGO"],
+         ["APPLE", "BANANA", "CHERRIES", "GRAPES", "COCONUT", "MANGO", "PINEAPPLE", "WATERMELON", "KIWI", "LITCHIE", "STRAWBERRY"],
+         ["CORN", "EGGPLANT", "PEA", "POTATO", "CABBAGE", "CUCUMBER", "LETTUCE", "SPINACH", "BROCCOLI", "FRENCHBEANS", "MUSHROOM"],
+         ["FOOTBALL", "GOLF", "SWIMMING", "TENNIS", "BOWLING", "CRICKET", "HOCKEY", "SQUASH", "ARCHERY", "BADMINTON", "SKATING"]
+       ];
+
+       chosenCategory = categories[category_number];
+       word = chosenCategory[item_number];
+       word = word.replace(/\s/g, "-");
+       console.log(word);
+       buttons();
+
+       geusses = [ ];
+       lives = 10;
+       counter = 0;
+       space = 0;
+       result();
+       comments();
+     }
+     play();
+    }
+    function alpha_letter3(category_number,item_number) {
+
+     var alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+           'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+           'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+
+     // Get elements
+     var showLives = document.getElementById("sports_mylives");
+     var showCatagory = document.getElementById("scatagory");
+
+     // create alphabet ul
+     var buttons = function () {
+       myButtons = document.getElementById('buttons_sports');
+       letters = document.createElement('ul');
+
+       for (var i = 0; i < alphabet.length; i++) {
+         letters.id = 'alphabet';
+         list = document.createElement('li');
+         list.id = 'letter';
+         list.innerHTML = alphabet[i];
+         check();
+         myButtons.appendChild(letters);
+         letters.appendChild(list);
+       }
+     }
+
+     // Create geusses ul
+      result = function () {
+       wordHolder = document.getElementById('hold_sports');
+       correct = document.createElement('ul');
+
+       for (var i = 0; i < word.length; i++) {
+         correct.setAttribute('id', 'my-word');
+         guess = document.createElement('li');
+         guess.setAttribute('class', 'guess');
+         if (word[i] === "-") {
+           guess.innerHTML = "-";
+           space = 1;
+         } else {
+           guess.innerHTML = "<input type='button' class='letter_btn' value=' '/>"; // Empty Space created for inserting values
+         }
+
+         geusses.push(guess);
+         wordHolder.appendChild(correct);
+         correct.appendChild(guess);
+       }
+     }
+
+     // Show lives
+      comments = function () {
+       showLives.innerHTML = "Moves Left " + lives ;
+       if (lives < 1) {
+         showLives.innerHTML = "Out of Moves";
+
+
+
+       }
+       for (var i = 0; i < geusses.length; i++) {
+         if (counter + space === geusses.length) {
+           showLives.innerHTML = "<p style='color:green'>Correct!</p>";
+
+           time=false;
+            total_score = total_score + completion_score + lives ;
+           $("#sports_score").html( total_score );
+           var modal = document.getElementById('myModal_s');
+           var modalImg = document.getElementById('img04');
+           modal.style.display = "block";
+           modalImg.src = document.getElementById('s_img').src;
+           var span = document.getElementById('close')[3];
+           span.onclick = function() {
+             modal.style.display = "none";
+             next_sports();
+           }
+           s_audio.play();
+         }
+       }
+     }
+
+     // OnClick Function
+      check = function () {
+       list.onclick = function () {
+         var geuss = (this.innerHTML);
+         this.setAttribute("class", "active");
+         this.onclick = null;
+         for (var i = 0; i < word.length; i++) {
+           if (word[i] === geuss) {
+             geusses[i].innerHTML = "<input type='button' class='letter_btn' value='" + geuss +  "'/>";
+             counter += 1;
+           }
+         }
+         var j = (word.indexOf(geuss));
+         if (j === -1) {
+           lives -= 1;
+           comments();
+           animate();
+         } else {
+           comments();
+         }
+       }
+     }
+
+
+     // Play
+     play = function () {
+       categories = [
+         ["RED", "BLUE", "PINK", "BLACK", "WHITE", "GREY", "YELLOW", "GREEN", "ORANGE", "VIOLET", "INDIGO"],
+         ["APPLE", "BANANA", "CHERRIES", "GRAPES", "COCONUT", "MANGO", "PINEAPPLE", "WATERMELON", "KIWI", "LITCHIE", "STRAWBERRY"],
+         ["CORN", "EGGPLANT", "PEA", "POTATO", "CABBAGE", "CUCUMBER", "LETTUCE", "SPINACH", "BROCCOLI", "FRENCHBEANS", "MUSHROOM"],
+         ["FOOTBALL", "GOLF", "SWIMMING", "TENNIS", "BOWLING", "CRICKET", "HOCKEY", "SQUASH", "ARCHERY", "BADMINTON", "SKATING"]
+       ];
+
+       chosenCategory = categories[category_number];
+       word = chosenCategory[item_number];
+       word = word.replace(/\s/g, "-");
+       console.log(word);
+       buttons();
+
+       geusses = [ ];
+       lives = 10;
+       counter = 0;
+       space = 0;
+       result();
+       comments();
+     }
+     play();
+    }
+
+
+    </script>
+    <style type="text/css">
+    #myImg{
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #myImg:hover {
+      opacity: 0.5;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      padding-top: 100px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.9);
+    }
+    .modal-content {
+      margin: auto;
+      display: block;
+      width: auto;
+      height: 50%;
+      max-width: 700px;
+    }
+    .modal-content {
+      -webkit-animation-name: zoom;
+      -webkit-animation-duration: 0.6s;
+      animation-name: zoom;
+      animation-duration: 0.6s;
+    }
+    @-webkit-keyframes zoom {
+      from {-webkit- transform: scale(0)} to {-webkit-transform: scale(1)}
+    }
+    @keyframes zoom {
+      from {transform: scale(0)} to {transform: scale(1)}
+    }
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 35px;
+      color: #f1f1f1;
+      font-size: 40px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .close:hover, .close:focus {
+      color: #bbb;
+      text-decoration: none;
+      cursor:pointer;
+    }
+    @media only screen and (max-width: 700px) {
+      .modal-content {
+        width: 100%;
+      }
+    }
+    .hide{
+      display:none;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      z-index: -1;
+    }
+    html {
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+    #name{
+      color:black;
+      text-align:left;
+      z-index:5;
+      margin-top: 30%;
+      position: absolute;
+      font-size:80%;
+      width: 15vw;
+      height: 20%;
+      margin-left: 2%;
+    }
+    #heading, .tutor{
+      text-align: center;
+      width : 100%;
+      font-size: 5vw;
+      color: black;
+      text-shadow: 2px 4px rgba(0,0,0,0.24);
+    }
+    .tutor_step{
+      text-align: center;
+      width: 100%
+    }
+    .tutortxt{
+      text-align: center;
+      width : 100%;
+      color: black;
+      font-size: 24px;
+    }
+    body{
+      background-image: url(Images/main.png);
+      background-attachment: fixed;
+      margin: 0%;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    .content, .tutorials{
+      text-align: center;
+      width : 100%;
+    }
+    .btn{
+      background-color: #e7e7e7;
+      border: 2px solid white;
+      border-radius: 8px;
+      color: black;
+      text-align: center;
+      font-size: 4vw;
+      width : 35vw;
+      height : 12vh;
+      padding : 1%;
+      margin: 0.5vh;
+      transition-duration: 0.4s;
+    }
+    .score{
+      text-align:center;
+      display:block;
+      float: right;
+      position: relative;
+      z-index: 1;
+      margin-top: -8%;
+      margin-right: 3%;
+      font-size: 2.5vw;
+      padding: 10px 20px;
+      border:2px solid white;
+      width: 10%;
+    }
+    .mylives{
+      text-align:center;
+      display:block;
+      position: absolute;
+      float: left;
+      margin-left: 2%;
+      margin-top: -8%;
+      font-size: 2.5vw;
+      padding: 10px;
+      border:2px solid white;
+      width: 10%;
+      z-index: 1;
+    }
+    .btn:hover{
+      box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19)
+    }
+    #c_img, #v_img, #s_img, #f_img{
+      width: auto;
+      height: 30%;
+    }
+    .img_block{
+      text-align: center;
+    }
+    .timer{
+      float: right;
+      margin-right: 3%;
+      font-size: 1vh;
+      padding: 10px;
+      border:2px solid white;
+      width: 10%;
+      text-decoration: none;
+    }
+    .opt_btn {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 100%;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      outline: none;
+      color: black;
+      background-color:  #ecf0f1;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 9px #999;
+    }
+    .opt_btn:hover {background-color: #bdc3c7}
+
+    .opt_btn:active {
+      background-color: #bdc3c7;
+      box-shadow: 0 5px #666;
+      transform: translateY(2px);
+    }
+
+
+    /* Variabes */
+    $orange: #ffa600;
+    $green: #c1d72e;
+    $blue: #82d2e5;
+    $grey:#f3f3f3;
+    $white: #fff;
+    $base-color:$green ;
+
+    /* Mixin's */
+
+    @mixin transition {
+      -webkit-transition: all 0.5s ease-in-out;
+      -moz-transition: all 0.5s ease-in-out;
+      transition: all 0.5s ease-in-out;
+    }
+
+    @mixin clear {
+      &:after {
+          content: "";
+          display: table;
+          clear: both;
+        }
+    }
+
+     @mixin box-size {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+
+     @mixin transition {
+      -webkit-transition: all 0.3s ease-in-out;
+      -moz-transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+    }
+
+    @mixin fade {
+      -moz-transition: all 1s ease-in;
+      -moz-transition:all 0.3s ease-in-out;
+      -webkit-transition:all 0.3s ease-in-out;
+    }
+
+    @mixin opacity {
+      opacity:0.4;
+      filter:alpha(opacity=40);
+      @include fade;
+    }
+
+    @mixin corners ($radius) {
+      -moz-border-radius: $radius;
+      -webkit-border-radius: $radius;
+      border-radius: $radius;
+      -khtml-border-radius: $radius;
+    }
+
+    body {
+      background:$base-color;
+      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+      color:$white;
+      height:100%;
+      text-align:center;
+      font-size:18px;
+    }
+
+    .wrappper{
+      @include clear;
+      width:100%;
+      margin:0 auto;
+    }
+
+
+    canvas{
+      color:$white;
+      border: $white dashed 2px;
+      padding:15px;
+    }
+
+    h1, h2, h3 {
+    	font-family: 'Roboto', sans-serif;
+    	font-weight: 100;
+       margin:5px 0;
+    }
+
+    h1 {
+    	font-size: 2.6em;
+    }
+
+    h2 {
+    	font-size: 1.6em;
+    }
+
+    p{
+      font-size: 20px;
+    }
+
+    #alphabet {
+      @include clear;
+      margin:8.5px auto;
+      padding:0;
+      max-width:900px;
+
+    }
+
+    #alphabet li {
+      float:left;
+      margin: 0 10px 10px 0;
+      list-style:none;
+      width:5vw;
+      height:5vh;
+      font-size: 4vh;
+      padding-top:5px;
+      margin: 0;
+      background:#654321;
+      cursor:pointer;
+      @include corners(5px);
+      border: solid 2px white;
+      border-radius: 5px;
+      color: white;
+
+        &:hover{
+          background:$base-color;
+          border: solid 1px $white;
+          color:$white;
+        }
+    }
+    .letter_btn{
+      padding:1vh;
+      background:white;
+        color: #654321;
+        font-size: 5vh;
+        width:10vh;
+        height:10 vh;
+      border: solid 2px #654321;
+      font-weight: bolder;
+    }
+    #my-word {
+      margin: 0;
+      display: block;
+      padding: 0;
+      display:block;
+    }
+
+    #my-word li {
+      position: relative;
+      list-style: none;
+      margin: 0;
+      display: inline-block;
+      padding: 0 10px;
+      font-size:1.6em;
+    }
+
+    .active {
+      @include opacity;
+      cursor:default;
+
+      &:hover{
+          @include fade;
+          @include opacity;
+        }
+    }
+    .nav{
+      display:block;
+    }
+
+    button{
+      @include corners (5px);
+      background:$base-color;
+      color:$white;
+      border: solid 1px $white;
+      text-decoration:none;
+      cursor:pointer;
+      font-size:1.2em;
+      padding:18px 10px;
+      width:180px;
+      margin: 10px;
+      outline: none;
+
+        &:hover{
+          @include transition;
+          background:$white;
+          border: solid 1px $white;
+          color:$base-color;
+        }
+    }
+
+    @media (max-width: 767px) {
+      #alphabet {
+      padding:0 0 0 15px;
+    }
+      }
+
+      @media (max-width: 480px) {
+      #alphabet {
+      padding:0 0 0 25px;
+    }
+      }
+    .tutor_img{
+      width:auto;
+      height:50%;
+      border: 8px solid white;
+      border-radius: 8px;
+      z-index:0;
+      animation-name: blinkanim;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+      animation-fill-mode: forwards;
+    }
+    .scr_img{
+      width:auto;
+      height:50%;
+      border: 8px solid white;
+      border-radius: 8px;
+      z-index:0;
+      animation-name: blinkanim;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+      animation-fill-mode: forwards;
+    }
+    @keyframes blinkanim {
+        0%   {border-color: white;}
+        100% {border-color: red;}
+    }
+    </style>
+    <title>
+      Rebus
+    </title>
+  </head>
+  <body>
+
+    <!-- Main Menu Commences-->
+    <div class="menu" id="menu">
+      <div class="header">
+        <p id="name" <b>Developed by : </b> Trushil Lad , Priyank Prajapati & Yash Golwala </p>
+  			<h1 id="heading"><em>Rebus</em></h>
+  		</div>
+      <br><br>
+      <table class = "content">
+        <tr>
+          <td><input style="border-color:blue;" type="button" id="level_btn" name="levels" value="Levels" class="btn" onclick="btnclk_sound.play();"></td>
+        </tr>
+        <tr>
+          <td><input style="border-color:red;" type="button" id="help_btn" name="help" value="How to Play" class="btn" onclick="btnclk_sound.play()"></td>
+        </tr>
+        <tr>
+          <td><input style="border-color:green;" type="button" id="settings_btn" name="settings" value="Settings" class="btn" onclick="btnclk_sound.play()"></td>
+        </tr>
+        <tr>
+          <td><input style="border-color:yellow;" type="button" id="quit_btn" name="quit" value="Quit" class="btn" onclick="btnclk_sound.play()"></td>
+        </tr>
+        <tr>
+          <td><a href="index.html"><input style="border-color:purple;" type="button" id="reset_btn" name="reset" value="Reset" class="btn" onclick="btnclk_sound.play()"></td></a>
+        </tr>
+      </table>
+    </div>
+    <!-- Main Menu Concludes-->
+
+    <!-- Settings Commences-->
+    <div class="hide" id="settings">
+      <div class="header">
+        <br>
+        <h1 id="heading"><em>Settings</em></h>
+      </div>
+      <br><br>
+      <table class = "content">
+        <tr>
+          <td><input style="border-color:blue;"  type="button" id="bgsound" name="sound" value="Sound : ON" class="btn" onclick="toggle()">
+            <audio id="btnclk_sound"><source src="Sound/pop1.mp3" type="audio/mp3" >
+            </audio></td>
+        </tr>
+        <tr>
+          <td><input style="border-color:green;"  type="button" id="music" name="music" value="Music : ON" class="btn" onClick="toggleSound()">
+                    <audio id="background" autoplay loop ><source src="Sound/background3.mp3" type="audio/mp3" ></td>
+        </tr>
+        <tr>
+          <td><input style="border-color:yellow;"  type="button" id="smenu_btn" name="menu" value="Main Menu" class="btn" onclick="btnclk_sound.play()"></td>
+        </tr>
+      </table>
+    </div>
+    <!-- Settings Concludes-->
+
+
+
+    <!-- Help Commences-->
+    <div class="hide" id="help">
+      <em><h1 class="tutor">How to play!</h1></em>
+      <div class="tutor_step" id="step1">
+        <h1 class="tutor">Step 1:</h1>
+        <p class="tutortxt">Click on Level Button.</p>
+        <div>
+          <img src="Images/src (1).png" class="tutor_img">
+        </div>
+        <input type="button" id="step1_btn" value="Next Step" class="btn"  onclick="btnclk_sound.play()">
+      </div>
+      <div class="hide" id="step2">
+        <h1 class="tutor">Step 2:</h1>
+        <p class="tutortxt">Then Click on Preffered Category.</p>
+        <div>
+          <img src="Images/src (2).png" class="tutor_img">
+        </div>
+        <input type="button" id="step2_btn" value="Next Step" class="btn" onclick="btnclk_sound.play()">
+      </div>
+      <div class="hide" id="step3">
+        <h1 class="tutor">Step 3:</h1>
+        <p class="tutortxt">Window of selected category with image will appear</p>
+        <div>
+          <img src="Images/src (3).png" class="scr_img">
+        </div>
+        <input type="button" id="step3_btn" value="Next Step" class="btn" onclick="btnclk_sound.play()">
+      </div>
+      <div class="hide" id="step4">
+        <h1 class="tutor">Step 4:</h1>
+        <p class="tutortxt">Using alphabets given, guess the word</p>
+        <div>
+          <img src="Images/src (4).png" class="scr_img">
+        </div>
+        <input type="button" id="step4_btn" value="Next Step" class="btn" onclick="btnclk_sound.play()">
+      </div>
+      <div class="hide" id="step5">
+        <h1 class="tutor">Step 5:</h1>
+        <p class="tutortxt">After guessing the correct answer, click on next button</p>
+        <div>
+          <img src="Images/src (5).png" class="scr_img">
+        </div>
+        <input type="button" id="step5_btn" value="Main Menu" class="btn"  onclick="btnclk_sound.play()">
+      </div>
+    </div>
+    <!-- Settings Concludes-->
+
+    <!-- Levels Commences-->
+    <div class="hide" id="levels">
+      <div class="header">
+        <br>
+        <h1 id="heading"><em>Levels</em></h>
+      </div>
+      <br><br>
+      <table class = "content">
+        <tr>
+        <td><input style="border-color:blue;"  type="button" id="colors_btn" name="colors" value="Colors" class="btn" onclick="btnclk_sound.play();alpha_letter(0,0);reset_colors()"></td>
+      </tr>
+      <tr>
+        <td><input style="border-color:green;"  type="button" id="fruits_btn" name="fruits" value="Fruits" class="btn" onclick="btnclk_sound.play();alpha_letter1(1,0);reset_fruits()"></td>
+      </tr>
+      <tr>
+        <td><input style="border-color:red;"  type="button" id="vegetables_btn" name="vegetables" value="Vegetables" class="btn" onclick="btnclk_sound.play();alpha_letter2(2,0);reset_vegetables()"></td>
+      </tr>
+      <tr>
+        <td><input style="border-color:yellow;"  type="button" id="sports_btn" name="sports" value="Sports" class="btn" onclick="btnclk_sound.play();alpha_letter3(3,0);reset_sports()"></td>
+      </tr>
+      <tr>
+        <td><input style="border-color:violet;"  type="button" id="lmenu_btn" name="menu" value="Main Menu" class="btn" onclick="btnclk_sound.play()"></td>
+      </tr>
+      </table>
+    </div>
+    <!-- Level Concludes-->
+
+
+
+    <!-- Colors Commences-->
+    <div class="hide" id="colors">
+      <div class="header">
+        <br>
+  			<h1 id="heading" class="common_header">Colors</h>
+  		</div>
+      <br><br>
+      <div class="score" id="score">Score: </div>
+      <p id="mylives" class="mylives"></p>
+      <div class="img_block">
+        <img src="Images/Colors (1).png" id="c_img">
+      </div>
+      <div class="ans_block">
+
+      </div>
+      <div class="wrapper" id="wrapper">
+        <div id="hold">
+        </div>
+        <div id="buttons">
+        </div>
+        <div id="myModal_c" class="modal">
+          <span class="close">&times;
+          </span>
+          <img class="modal-content" id="img01">
+          <audio id="c_audio"><source src="Sound/Colors (1).mp3" type="audio/mp3" >
+          </audio>
+        </div>
+    </div>
+    <div class=""  >
+        <table class = "content">
+          <tr>
+            <td><input type="button" style="border-color:blue;" id="colors_menu_btn" name="menu" value="Back" class="btn" onclick="btnclk_sound.play();del()"></td>
+            <td></td>
+            <td><input type="reset" style="border-color:red;" id="next_btn" name="reset" value="Skip" max="1" class="btn" onclick="btnclk_sound.play();next_colors()"></td>
+          </tr>
+        </table>
+    </div>
+  </div>
+    <!-- Color Concludes-->
+
+    <!-- Fruits Commences-->
+    <div class="hide" id="fruits">
+      <div class="header">
+        <br>
+        <h1 id="heading">Fruits</h>
+      </div>
+      <br><br>
+      <div class="score" id="fruits_score">Score: </div>
+      <p id="fruits_mylives" class="mylives"></p>
+      <div class="img_block">
+        <img src="Images/Fruits (1).png" id="f_img">
+      </div>
+      <div class="ans_block">
+
+      </div>
+      <div class="wrapper" id="wrapper">
+        <div id="hold_fruits">
+        </div>
+        <div id="buttons_fruits">
+        </div>
+        <div id="myModal_f" class="modal">
+          <span class="close">&times;
+          </span>
+          <img class="modal-content" id="img02">
+          <audio id="f_audio"><source src="Sound/Fruits (1).mp3" type="audio/mp3" >
+          </audio>
+        </div>
+    </div>
+    <div class=""  >
+        <table class = "content">
+          <tr>
+            <td><input type="button" style="border-color:blue;" id="fruits_menu_btn" name="menu" value="Back" class="btn" onclick="btnclk_sound.play();del()"></td>
+            <td></td>
+            <td><input type="reset" style="border-color:red;" id="next_btn" name="reset" value="Skip" class="btn" onclick="btnclk_sound.play();next_fruits()"></td>
+          </tr>
+        </table>
+    </div>
+    </div>
+    <!-- Fruits Concludes-->
+    <!-- Vegetables Commences-->
+    <div class="hide" id="vegetables">
+      <div class="header">
+        <br>
+        <h1 id="heading">Vegetables</h>
+      </div>
+      <br><br>
+      <div class="score" id="vegetables_score">Score: </div>
+      <p id="vegetables_mylives" class="mylives"></p>
+      <div class="img_block">
+        <img src="Images/Vegetables (1).png" id="v_img">
+      </div>
+      <div class="ans_block">
+
+      </div>
+      <div class="wrapper" id="wrapper">
+        <div id="hold_vegetables">
+        </div>
+        <div id="buttons_vegetables">
+        </div>
+        <div id="myModal_v" class="modal">
+          <span class="close">&times;
+          </span>
+          <img class="modal-content" id="img03">
+          <audio id="v_audio"><source src="Sound/Vegetables (1).mp3" type="audio/mp3" >
+          </audio>
+        </div>
+    </div>
+    <div class=""  >
+        <table class = "content">
+          <tr>
+            <td><input type="button" style="border-color:blue;" id="vegetables_menu_btn" name="menu" value="Back" class="btn" onclick="btnclk_sound.play();del()"></td>
+            <td></td>
+            <td><input type="reset" style="border-color:red;" id="next_btn" name="reset" value="Skip" class="btn" onclick="btnclk_sound.play();next_vegetables()"></td>
+          </tr>
+        </table>
+    </div>
+    </div>
+    <!-- vegetables Concludes-->
+    <!-- Sports Commences-->
+   <div class="hide" id="sports">
+      <div class="header">
+        <br>
+        <h1 id="heading">Sports</h>
+      </div>
+      <br><br>
+      <div class="score" id="sports_score">Score: </div>
+      <p id="sports_mylives" class="mylives"></p>
+      <div class="img_block">
+        <img src="Images/Sports (1).png" id="s_img">
+      </div>
+      <div class="ans_block">
+
+      </div>
+      <div class="wrapper" id="wrapper">
+        <div id="hold_sports">
+        </div>
+        <div id="buttons_sports">
+        </div>
+        <div id="myModal_s" class="modal">
+          <span id="s_close" class="close">&times;
+          </span>
+          <img class="modal-content" id="img04">
+          <audio id="s_audio"><source src="Sound/Sports (1).mp3" type="audio/mp3" >
+          </audio>
+        </div>
+    </div>
+    <div class=""  >
+        <table class = "content"> <!-- Buttons for Navigation-->
+          <tr>
+            <td><input type="button" style="border-color:blue;" id="sports_menu_btn" name="menu" value="Back" class="btn" onclick="btnclk_sound.play();del()"></td>
+            <td></td>
+            <td><input type="reset" style="border-color:red;" id="next_btn" name="reset" value="Skip" class="btn" onclick="btnclk_sound.play();next_sports()"></td>
+          </tr>
+        </table>
+    </div>
+  </div>  <!-- Sports Concludes-->
+  </body>
+<!--thomas believes-->
+</html>
